@@ -1,0 +1,11 @@
+#modules
+node_modules/
+
+# VSCode
+.vscode
+
+#dotenv
+.env
+
+#package-lock.json
+package-lock.json
