@@ -1,26 +1,26 @@
-var LocalStrategy   = require('passport-local').Strategy;
+var LocalStrategy = require('passport-local').Strategy;
 var User = require('../models/user');
 var bCrypt = require('bcrypt-nodejs');
 
-module.exports = function(passport){
+module.exports = function (passport) {
 
-	passport.use('signup', new LocalStrategy({
-            passReqToCallback : true // allows us to pass back the entire request to the callback
-        },
-        function(req, username, password, done) {
+    passport.use('signup', new LocalStrategy({
+        passReqToCallback: true // allows us to pass back the entire request to the callback
+    },
+        function (req, username, password, done) {
 
-            findOrCreateUser = function(){
+            findOrCreateUser = function () {
                 // find a user in Mongo with provided username
-                User.findOne({ 'username' :  username }, function(err, user) {
+                User.findOne({ 'username': username }, function (err, user) {
                     // In case of any error, return using the done method
-                    if (err){
-                        console.log('Erro no registro: '+err);
+                    if (err) {
+                        console.log('Erro no registro: ' + err);
                         return done(err);
                     }
                     // already exists
                     if (user) {
-                        console.log('Já existe usuário com o nome: '+username);
-                        return done(null, false, req.flash('message','Usuário já existe'));
+                        console.log('Já existe usuário com o nome: ' + username);
+                        return done(null, false, req.flash('message', 'Usuário já existe'));
                     } else {
                         // if there is no user with that email
                         // create the user
@@ -34,12 +34,12 @@ module.exports = function(passport){
                         newUser.lastName = req.param('lastName');
 
                         // save the user
-                        newUser.save(function(err) {
-                            if (err){
-                                console.log('Erro ao salvar usuário: '+err);  
-                                throw err;  
+                        newUser.save(function (err) {
+                            if (err) {
+                                console.log('Erro ao salvar usuário: ' + err);
+                                throw err;
                             }
-                            console.log('Registro do usuário realizado com sucesso!');    
+                            console.log('Registro do usuário realizado com sucesso!');
                             return done(null, newUser);
                         });
                     }
@@ -52,7 +52,7 @@ module.exports = function(passport){
     );
 
     // Generates hash using bCrypt
-    var createHash = function(password){
+    var createHash = function (password) {
         return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
     }
 
